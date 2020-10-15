@@ -23,12 +23,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+// 配置session
 app.use(
   session({
     secret: "secret",
     cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
   })
 );
+// 添加拦截，把相应拦截信息添加到locals供views模板使用
 app.use(function (req, res, next) {
   res.locals.user = req.session.user;
   var err = req.session.error;

@@ -6,6 +6,7 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "首页" });
 });
 
+// all方法拦截包括get, post等请求
 router.all("/login", notAuthentication);
 
 router.get("/login", function (req, res) {
