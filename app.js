@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var ejs = require("ejs");
+var session = require("express-session");
 
 //var indexRouter = require('./routes/index');
 var routes = require("./routes/index");
@@ -22,6 +23,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: "secret",
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
+  })
+);
+app.use(function (req, res, next) {
+  res.locals.user = req.session.user;
+  var err = req.session.error;
+  delete req.session.error;
+  res.locals.message = "";
+  if (err) {
+    res.locals.message = '<div class="alert alert-error">' + err + "</div>";
+  }
+
+  next();
+});
 
 //app.use('/', indexRouter);
 app.use("/", routes);
